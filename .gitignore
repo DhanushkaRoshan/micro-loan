@@ -1,0 +1,9 @@
+target/
+reports/
+*.log
+.DS_Store
+application.properties
+!src/main/resources/application.properties
+.idea/
+*.iml
+.vscode/

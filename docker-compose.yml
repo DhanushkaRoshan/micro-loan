@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: loan-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: loandb
+      MYSQL_USER: loanapp
+      MYSQL_PASSWORD: loanapp
+    ports:
+      - "3307:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_allowed_packet=64M
+    volumes:
+      - loan-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-prootpw"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  legacy-mysql:
+    image: mysql:8.0
+    container_name: loan-mysql-legacy
+    profiles: ["legacy"]
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+    ports:
+      - "3308:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --max_allowed_packet=256M
+    volumes:
+      - loan-mysql-legacy-data:/var/lib/mysql
+
+volumes:
+  loan-mysql-data:
+  loan-mysql-legacy-data:
