@@ -9,7 +9,7 @@ A microfinance loan management system built with **JavaFX + Hibernate + MySQL**.
 ## Quick start
 
 ```bash
-docker compose up -d mysql                 # MySQL 8.0 on port 3307
+docker compose up -d mysql                 # MySQL 8.4 on port 3307
 mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.Bootstrap -Dexec.args="--demo"
 mvn javafx:run                             # or: mvn package && java -jar target/loan-system-2.0.0.jar
 ```
