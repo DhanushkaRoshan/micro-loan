@@ -4,11 +4,10 @@
 
 A microfinance loan management system built with **JavaFX + Hibernate + MySQL**.
 
----
-
 ## Quick start
 
 ```bash
+cp .env.example .env                       # set database credentials
 docker compose up -d mysql                 # MySQL 8.4 on port 3307
 mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.Bootstrap -Dexec.args="--demo"
 mvn javafx:run                             # or: mvn package && java -jar target/loan-system-2.0.0.jar
@@ -26,8 +25,6 @@ mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.CreateAdmin
 mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.CreateAdmin \
     -Dexec.args="manager s3cret-pass"
 ```
-
----
 
 ## Layout
 
@@ -48,14 +45,6 @@ src/main/resources/
 **Flyway owns the schema; Hibernate is set to `validate`.** Change the database by
 adding `V2__*.sql`, never by editing `V1` or letting Hibernate generate DDL.
 
-### Deriving money figures
-
-`LoanBalance` (total paid, balance, due-to-date, arrears) is computed on read.
-`LoanService.balances(...)` loads figures for a whole list in one query — use it
-in list screens rather than calling `balanceOf` per row.
-
----
-
 ## Commands
 
 ```bash
@@ -64,26 +53,18 @@ mvn javafx:run                # run from source
 mvn package                   # fat jar -> target/loan-system-2.0.0.jar
 mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.Bootstrap
 mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.Bootstrap -Dexec.args="--demo"
-mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.CreateAdmin    # recover a locked-out system
+mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.CreateAdmin
 mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.ExportReports
-mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.UiSnapshot   # renders every screen to PNG
-mvn test -Dtest=LoanMathTest#scheduleSumsExactly                            # a single test
+mvn compile exec:java -Dexec.mainClass=lk.sat.loan.tools.UiSnapshot
 ```
-
-`UiSnapshot` also works as a UI smoke test — it fails if any view throws while
-loading its data.
 
 ## Configuration
 
-`src/main/resources/application.properties`, overridden by an
-`application.properties` next to the jar, overridden by environment variables:
+`application.properties`, overridden by environment variables:
 
 | Setting | Env var | Default |
 |---|---|---|
 | `db.url` | `LOAN_DB_URL` | `jdbc:mysql://localhost:3307/loandb?...` |
-| `db.user` | `LOAN_DB_USER` | `loanapp` |
-| `db.password` | `LOAN_DB_PASSWORD` | `loanapp` |
+| `db.user` | `LOAN_DB_USER` | — |
+| `db.password` | `LOAN_DB_PASSWORD` | — |
 | `reports.dir` | `LOAN_REPORTS_DIR` | `reports` |
-
-Change the MySQL credentials in `docker-compose.yml` before putting this on a
-shared machine — the defaults are development values.

@@ -4,10 +4,10 @@ services:
     container_name: loan-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpw
-      MYSQL_DATABASE: loandb
-      MYSQL_USER: loanapp
-      MYSQL_PASSWORD: loanapp
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-loandb}
+      MYSQL_USER: ${MYSQL_USER:-loanapp}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3307:3306"
     command:
@@ -17,7 +17,7 @@ services:
     volumes:
       - loan-mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-prootpw"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -27,7 +27,7 @@ services:
     container_name: loan-mysql-legacy
     profiles: ["legacy"]
     environment:
-      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3308:3306"
     command:
